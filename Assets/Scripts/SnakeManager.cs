@@ -11,6 +11,7 @@ public class SnakeManager : MonoBehaviour
     [SerializeField] List<GameObject> snakeBody = new List<GameObject>();
 
     private float horizontal;
+    private float vertical;
     private float countUp = 0;
 
     // Start is called before the first frame update
@@ -35,11 +36,17 @@ public class SnakeManager : MonoBehaviour
     void Snakemovement()
     {
         horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
         snakeBody[0].GetComponent<Rigidbody>().velocity = snakeBody[0].transform.forward * speed * Time.deltaTime;
         
         if (horizontal != 0)
         {
             snakeBody[0].transform.Rotate(new Vector3(0, turnSpeed * horizontal * Time.deltaTime, 0));
+        }
+
+        if (vertical != 0)
+        {
+            snakeBody[0].transform.Rotate(new Vector3(-turnSpeed * vertical * Time.deltaTime, 0, 0));
         }
 
         if (snakeBody.Count > 1)
@@ -56,7 +63,7 @@ public class SnakeManager : MonoBehaviour
     }
 
     // ReSharper disable Unity.PerformanceAnalysis
-    void CreateBodyParts()
+    public void CreateBodyParts()
     {
 
         if (snakeBody.Count == 0)
@@ -73,10 +80,10 @@ public class SnakeManager : MonoBehaviour
         
         MarkersManager markM = snakeBody[snakeBody.Count - 1].GetComponent<MarkersManager>();
         
-        /*if (countUp == 0)
+        if (countUp == 0)
         {
             markM.ClearMarkerList();
-        }*/
+        }
 
         countUp += Time.deltaTime;
         if (countUp >= distanceBetween)
@@ -93,5 +100,10 @@ public class SnakeManager : MonoBehaviour
             temp.GetComponent<MarkersManager>().ClearMarkerList();
             countUp = 0;
         }
+    }
+
+    public void AddBodyParts(GameObject obj)
+    {
+       bodyParts.Add(obj);
     }
 }
